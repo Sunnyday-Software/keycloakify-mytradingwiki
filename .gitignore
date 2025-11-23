@@ -60,3 +60,5 @@ jspm_packages
 /.rendered
 
 .idea
+.claude
+.playwright-mcp
