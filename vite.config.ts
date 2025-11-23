@@ -8,10 +8,11 @@ export default defineConfig({
     plugins: [
         react(),
         keycloakify({
-
+            themeName: "mytradingwiki",
             accountThemeImplementation: "none",
             environmentVariables: [
-                /*{ name: "MY_APP_API_URL", default: "http://localhost:8080" },*/
+                { name: "ASTRO_APP_URL", default: "http://localhost:4321" },
+                { name: "SESSION_ENDPOINT", default: "/api/auth/session" }
             ]
         }),
         tailwindcss()
