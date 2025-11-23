@@ -17,6 +17,9 @@ export default defineConfig({
         tailwindcss()
     ],
     resolve: {
-        preserveSymlinks: true // Enable symlink support for shared assets
+        preserveSymlinks: true, // Enable symlink support for shared assets
+        alias: {
+            '@shared': '/shared/assets'
+        }
     }
 });

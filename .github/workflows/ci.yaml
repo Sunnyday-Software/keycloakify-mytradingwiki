@@ -12,6 +12,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  submodules: recursive
             - uses: actions/setup-node@v4
             - uses: bahmutov/npm-install@v1
             - run: npm run build-keycloak-theme
@@ -39,6 +41,8 @@ jobs:
         if: needs.check_if_version_upgraded.outputs.is_upgraded_version == 'true'
         steps:
             - uses: actions/checkout@v4
+              with:
+                  submodules: recursive
             - uses: actions/setup-node@v4
             - uses: bahmutov/npm-install@v1
             - run: npm run build-keycloak-theme

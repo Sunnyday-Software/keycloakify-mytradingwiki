@@ -1,4 +1,4 @@
-import "./main.css";
+import "@shared/styles/modules/keycloakify.css";
 // ...
 import { Suspense, lazy } from "react";
 import type { ClassKey } from "keycloakify/login";
