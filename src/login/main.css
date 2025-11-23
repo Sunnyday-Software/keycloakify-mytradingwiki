@@ -1,3 +1,66 @@
-.kcFormHeaderClass {
-    border: 3px solid blue;
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Prosto+One&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+
+:root {
+    --pf-global--spacer--xs: --spacing(.5);
+    --pf-global--FontSize--sm: var(--text-sm);
+    --pf-global--active-color--100: var(--color-pink-500);
+    --pf-global--active-color--200: var(--color-pink-600);
+    --pf-global--active-color--300: var(--color-pink-700);
+    --pf-global--active-color--400: var(--color-pink-800);
+    --pf-global--primary-color--100: var(--color-emerald-500);
+    --pf-global--primary-color--200: var(--color-emerald-600);
+    --pf-global--primary-color--light-100: var(--color-emerald-300);
+    --pf-global--primary-color--dark-100: var(--color-emerald-600);
+    --pf-global--link--Color--dark: var(--color-emerald-700);
+    --pf-global--secondary-color--100: var(--color-purple-600);
+}
+
+.login-pf a {
+    @apply text-emerald-500 hover:text-emerald-600;
+
+}
+
+html.kcHtmlClass {
+    font-family: "Open Sans", sans-serif;
+}
+
+body.kcBodyClass {
+    background: url(./assets/authentication-background.svg) no-repeat center center fixed;
+    font-family: "Exo 2", sans-serif;
+    font-size: var(--text-base);
+    @apply min-h-screen flex flex-col justify-center items-center w-full;
+
+    div {
+        @apply flex-1;
+    }
+}
+
+.kcLoginClass {
+    @apply flex flex-col justify-center items-center w-full flex-1;
+}
+
+.kcHeaderClass {
+    @apply flex flex-col;
+}
+
+.kcHeaderWrapperClass {
+    @apply flex flex-row items-center gap-4;
+    @apply object-cover drop-shadow text-shadow-xs text-shadow-pink-300;
+
+    .kcLogoClass {
+        @apply inline-flex size-10 md:size-16 mt-0;
+    }
+}
+
+.kcFormCardClass {
+    @apply rounded-md shadow-md;
+
+    .kcFormHeaderClass {
+
+    }
+
+    .kcInfoAreaWrapperClass {
+        @apply rounded-b-md;
+    }
 }

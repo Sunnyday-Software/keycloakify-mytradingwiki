@@ -16,8 +16,13 @@ const kcContextExtensionPerPage: KcContextExtensionPerPage = {};
 export const { getKcContextMock } = createGetKcContextMock({
     kcContextExtension,
     kcContextExtensionPerPage,
-    overrides: {},
-    overridesPerPage: {}
+    overrides: {
+        realm: {
+            name: "MyTradingWiki",
+            displayName:"MyTradingWiki",
+            displayNameHtml: "MyTradingWiki"
+        }
+    }
 });
 
 export function createKcPageStory<PageId extends KcContext["pageId"]>(params: {
