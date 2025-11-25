@@ -62,3 +62,4 @@ jspm_packages
 .idea
 .claude
 .playwright-mcp
+/.keycloakify/realm-kc-26.json
