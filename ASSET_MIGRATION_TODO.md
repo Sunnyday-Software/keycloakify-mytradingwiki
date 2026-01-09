@@ -5,14 +5,14 @@ The shared assets repository has been created and the submodule has been added t
 
 **Assets Repository**: `git@github.com:Sunnyday-Software/mytradingwiki-assets.git`
 **Current Branch**: `chore/extract-assets-submodule`
-**Submodule Location**: `shared/assets/`
+**Submodule Location**: `shared/`
 
 ## Completed ✅
 
 ### Phase 1: Submodule Setup
-✅ Submodule added at `shared/assets`
+✅ Submodule added at `shared`
 ✅ Vite config updated with `preserveSymlinks: true`
-✅ Favicon symlink created: `assets/favicon.svg -> ../shared/assets/assets/icons/favicon.svg`
+✅ Favicon symlink created: `assets/favicon.svg -> ../shared/assets/icons/favicon.svg`
 ✅ Initial build verified and passes
 
 ### Phase 2: Documentation & CI/CD
@@ -28,11 +28,11 @@ The shared assets repository has been created and the submodule has been added t
   - Removed obsolete `src/login/assets/` folder
 
 ✅ **Background asset centralized:**
-  - Moved `authentication-background.svg` to `shared/assets/assets/`
+  - Moved `authentication-background.svg` to `shared/assets/`
   - Updated CSS background path to relative: `url(../../assets/authentication-background.svg)`
 
 ✅ **Vite alias configuration:**
-  - Added `@shared` alias in `vite.config.ts` pointing to `/shared/assets`
+  - Added `@shared` alias in `vite.config.ts` pointing to `/shared`
   - Updated KcPage.tsx import to use clean alias: `@shared/styles/modules/keycloakify.css`
   - No more messy relative paths (`../../../`)
 
@@ -54,7 +54,7 @@ The shared assets repository has been created and the submodule has been added t
 **Future Enhancement** (if needed):
 If you later want to unify with webapp theme tokens, you can:
 ```css
-/* In shared/assets/styles/modules/keycloakify.css */
+/* In shared/styles/modules/keycloakify.css */
 @import "../theme.tokens.css"; /* Shared design tokens */
 
 /* Then map to PatternFly variables */
@@ -103,14 +103,14 @@ This ensures CI properly initializes the submodule before building, preventing b
 ### Task 5: Cleanup After Webapp Refactor Completes
 Once the webapp completes Phase 5 (theme.css refactor into tokens + utilities):
 
-1. **Update submodule**: `git submodule update --remote shared/assets`
+1. **Update submodule**: `git submodule update --remote shared`
 2. **Consider importing split stylesheets**:
    ```css
    /* If you want shared tokens */
-   @import "../../shared/assets/styles/theme.tokens.css";
+   @import "../../shared/styles/theme.tokens.css";
 
    /* If you want shared utilities (optional) */
-   @import "../../shared/assets/styles/theme.utilities.css";
+   @import "../../shared/styles/theme.utilities.css";
    ```
 3. **Test build**: `yarn build`
 4. **Commit changes**: `git add . && git commit -m "chore: integrate refactored shared theme styles"`
@@ -126,7 +126,7 @@ Next step: Commit changes to the `chore/extract-assets-submodule` branch
 ## Notes
 - **Favicon**: Symlinked to shared assets ✅
 - **Background**: Centralized in shared assets ✅
-- **Styles**: Fully consolidated in `shared/assets/styles/modules/keycloakify.css` ✅
+- **Styles**: Fully consolidated in `shared/styles/modules/keycloakify.css` ✅
 - **Submodule Pointer**: Commit hash `c267004` (latest - includes keycloakify.css)
 - **Vite Alias**: `@shared` configured for clean imports ✅
 - **Build Status**: Storybook tested and passing ✅
@@ -147,7 +147,7 @@ keycloakify-mytradingwiki/
 keycloakify-mytradingwiki/
 ├── src/login/
 │   └── KcPage.tsx (imports: @shared/styles/modules/keycloakify.css)  ✅
-└── shared/assets/ (submodule)
+└── shared/ (submodule)
     ├── assets/
     │   └── authentication-background.svg      ✅ Centralized
     └── styles/modules/

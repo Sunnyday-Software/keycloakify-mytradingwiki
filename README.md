@@ -24,7 +24,7 @@ After cloning this repository, initialize the submodule:
 git submodule update --init --recursive
 ```
 
-This will populate the `shared/assets/` directory with the shared assets.
+This will populate the `shared/` directory with the shared assets.
 
 ## Updating Shared Assets
 
@@ -32,10 +32,10 @@ To pull the latest changes from the shared assets repository:
 
 ```bash
 # Pull latest assets
-git submodule update --remote shared/assets
+git submodule update --remote shared
 
 # Commit the submodule pointer update
-git add shared/assets
+git add shared
 git commit -m "chore: update shared assets to latest version"
 ```
 
@@ -45,7 +45,7 @@ If you need to modify files in the shared assets:
 
 1. Navigate to the submodule directory:
    ```bash
-   cd shared/assets
+   cd shared
    ```
 
 2. Make your changes and commit them:
@@ -58,7 +58,7 @@ If you need to modify files in the shared assets:
 3. Return to the keycloakify root and update the submodule pointer:
    ```bash
    cd ../..
-   git add shared/assets
+   git add shared
    git commit -m "chore: update shared assets submodule pointer"
    ```
 

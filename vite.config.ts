@@ -20,7 +20,7 @@ export default defineConfig({
     resolve: {
         preserveSymlinks: true, // Enable symlink support for shared assets
         alias: {
-            '@shared': '/shared/assets'
+            '@shared': '/shared'
         }
     }
 });
