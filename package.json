@@ -8,11 +8,13 @@
     },
     "type": "module",
     "scripts": {
+        "postinstall": "keycloakify sync-extensions",
         "dev": "vite",
         "build": "tsc && vite build",
         "build-keycloak-theme": "npm run build && keycloakify build",
         "storybook": "storybook dev -p 6006",
-        "format": "prettier . --write"
+        "format": "prettier . --write",
+        "test-email-theme": "keycloakify start-keycloak"
     },
     "license": "MIT",
     "keywords": [],
@@ -21,7 +23,8 @@
         "keycloakify": "^11.11.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "tailwindcss": "^4.1.17"
+        "tailwindcss": "^4.1.17",
+        "@keycloakify/email-native": "~260007.0.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.15.0",
