@@ -28,3 +28,18 @@ Use this guide to preview the Keycloak email theme locally with a running Keyclo
 ## Notes
 - The HTML email templates use inline styles for email-client compatibility.
 - If you update assets, restart the Keycloak container to ensure changes are picked up.
+
+## Manual QA checklist (expected results)
+Gmail Web:
+- Brand logo renders at the top of the card.
+- Title, intro, and context copy match the selected locale (EN/IT/NL).
+- Primary CTA button is visible and clickable.
+- Fallback link panel appears once and shows the full URL.
+- Expiration line shows a human-readable time window.
+- Footer support and signature are visible and aligned with brand copy.
+
+Gmail Mobile:
+- Card fits the viewport width without horizontal scrolling.
+- CTA button is at least 44px tall and readable.
+- Text remains legible; spacing is consistent.
+- Fallback link panel is visible once and the URL is selectable.

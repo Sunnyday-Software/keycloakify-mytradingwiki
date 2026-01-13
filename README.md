@@ -74,6 +74,20 @@ If you need to modify files in the shared assets:
 
 [Documentation](https://docs.keycloakify.dev/testing-your-theme)
 
+# Email theme (HTML)
+
+## Where to edit
+- Templates: `src/email/html/`
+- Tokens (EN/IT/NL): `src/email/messages/messages_en_override.properties`, `src/email/messages/messages_it_override.properties`, `src/email/messages/messages_nl_override.properties`
+- Assets: `src/email/resources/`
+
+## Local preview / test
+```bash
+npm run test-email-theme
+```
+Then set **Email theme** to `mytradingwiki` in Keycloak and trigger emails.
+Manual QA checklist and expected outputs: `docs/email/local-email-testing.md`.
+
 # How to customize the theme
 
 [Documentation](https://docs.keycloakify.dev/customization-strategies)
@@ -93,6 +107,15 @@ npm run build-keycloak-theme
 
 Note that by default Keycloakify generates multiple .jar files for different versions of Keycloak.  
 You can customize this behavior, see documentation [here](https://docs.keycloakify.dev/features/compiler-options/keycloakversiontargets).
+
+# Deploying the theme
+
+1. Build the theme JARs:
+   ```bash
+   npm run build-keycloak-theme
+   ```
+2. Use the generated JAR from `dist_keycloak/` and load it as a Keycloak provider (container mount or Keycloak installation).
+3. Run `kc.sh build` after adding the provider, then select the theme in **Realm Settings → Themes**.
 
 # Initializing the account theme
 
