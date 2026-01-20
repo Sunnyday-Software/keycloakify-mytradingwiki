@@ -14,6 +14,8 @@
         "build-keycloak-theme": "npm run build && keycloakify build",
         "storybook": "storybook dev -p 6006",
         "format": "prettier . --write",
+        "sync-email-assets": "bash scripts/sync-email-assets.sh",
+        "deploy-backend-theme": "bash scripts/deploy-local-backend-theme.sh",
         "test-email-theme": "keycloakify start-keycloak"
     },
     "license": "MIT",
