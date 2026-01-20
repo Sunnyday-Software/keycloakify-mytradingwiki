@@ -95,7 +95,7 @@
 <#macro CardStackLayout>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="card mtw-email-card" style="background-color:#ffffff; border:1px solid #e2e8f0; border-radius:16px; box-shadow:0 12px 24px rgba(15, 23, 42, 0.06);">
         <tr>
-            <td style="padding:20px 24px 24px 24px; font-family:'Inter','Segoe UI',Arial,sans-serif; color:#0f172a;" class="text">
+            <td style="padding:0; font-family:'Inter','Segoe UI',Arial,sans-serif; color:#0f172a;" class="text">
                 <#nested>
             </td>
         </tr>
@@ -193,13 +193,19 @@
         <@CenteredCardLayout>
             <@CardStackLayout>
                 <@BrandHero brandName=brandName logoUrl="${url.resourcesUrl}/mtw-logo-email.png" />
-                <@TitleBlock title=title />
-                <@BodyCopy intro=intro context=context />
-                <@PrimaryCTA label=ctaLabel link=ctaLink aria=ctaAria />
-                <@MetaRow text=metaText />
-                <@FallbackPanel intro=fallbackIntro label=fallbackLabel link=fallbackLink />
-                <@SecurityNotice note=securityNote disclaimer=disclaimer />
-                <@FooterLayout support=footerSupport signature=footerSignature />
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding:0 24px 24px 24px; font-family:'Inter','Segoe UI',Arial,sans-serif; color:#0f172a;">
+                            <@TitleBlock title=title />
+                            <@BodyCopy intro=intro context=context />
+                            <@PrimaryCTA label=ctaLabel link=ctaLink aria=ctaAria />
+                            <@MetaRow text=metaText />
+                            <@FallbackPanel intro=fallbackIntro label=fallbackLabel link=fallbackLink />
+                            <@SecurityNotice note=securityNote disclaimer=disclaimer />
+                            <@FooterLayout support=footerSupport signature=footerSignature />
+                        </td>
+                    </tr>
+                </table>
             </@CardStackLayout>
         </@CenteredCardLayout>
     </@RootLayout>
