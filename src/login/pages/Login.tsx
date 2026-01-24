@@ -16,9 +16,9 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
         classes
     });
 
-    const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField } = kcContext;
+    const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, properties } = kcContext;
 
-    const { msg, msgStr } = i18n;
+    const { msg, msgStr, currentLanguage } = i18n;
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
@@ -36,7 +36,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                     <div id="kc-registration">
                         <span>
                             {msg("noAccount")}{" "}
-                            <a tabIndex={8} href={url.registrationUrl}>
+                            <a tabIndex={8} href={`${properties.ASTRO_APP_URL}/${currentLanguage.languageTag}/auth/register`}>
                                 {msg("doRegister")}
                             </a>
                         </span>

@@ -44,23 +44,25 @@ git commit -m "chore: update shared assets to latest version"
 If you need to modify files in the shared assets:
 
 1. Navigate to the submodule directory:
-   ```bash
-   cd shared
-   ```
+
+    ```bash
+    cd shared
+    ```
 
 2. Make your changes and commit them:
-   ```bash
-   git add .
-   git commit -m "your commit message"
-   git push
-   ```
+
+    ```bash
+    git add .
+    git commit -m "your commit message"
+    git push
+    ```
 
 3. Return to the keycloakify root and update the submodule pointer:
-   ```bash
-   cd ../..
-   git add shared
-   git commit -m "chore: update shared assets submodule pointer"
-   ```
+    ```bash
+    cd ../..
+    git add shared
+    git commit -m "chore: update shared assets submodule pointer"
+    ```
 
 ## Troubleshooting
 
@@ -77,14 +79,17 @@ If you need to modify files in the shared assets:
 # Email theme (HTML)
 
 ## Where to edit
-- Templates: `src/email/html/`
-- Tokens (EN/IT/NL): `src/email/messages/messages_en_override.properties`, `src/email/messages/messages_it_override.properties`, `src/email/messages/messages_nl_override.properties`
-- Assets: `src/email/resources/`
+
+-   Templates: `src/email/html/`
+-   Tokens (EN/IT/NL): `src/email/messages/messages_en_override.properties`, `src/email/messages/messages_it_override.properties`, `src/email/messages/messages_nl_override.properties`
+-   Assets: `src/email/resources/`
 
 ## Local preview / test
+
 ```bash
 npm run test-email-theme
 ```
+
 Then set **Email theme** to `mytradingwiki` in Keycloak and trigger emails.
 Manual QA checklist and expected outputs: `docs/email/local-email-testing.md`.
 
@@ -111,9 +116,9 @@ You can customize this behavior, see documentation [here](https://docs.keycloaki
 # Deploying the theme
 
 1. Build the theme JARs:
-   ```bash
-   npm run build-keycloak-theme
-   ```
+    ```bash
+    npm run build-keycloak-theme
+    ```
 2. Use the generated JAR from `dist_keycloak/` and load it as a Keycloak provider (container mount or Keycloak installation).
 3. Run `kc.sh build` after adding the provider, then select the theme in **Realm Settings → Themes**.
 

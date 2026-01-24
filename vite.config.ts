@@ -11,8 +11,7 @@ export default defineConfig({
             themeName: "mytradingwiki",
             accountThemeImplementation: "none",
             environmentVariables: [
-                { name: "ASTRO_APP_URL", default: "http://localhost:4321" },
-                { name: "SESSION_ENDPOINT", default: "/api/auth/session" }
+                { name: "ASTRO_APP_URL", default: "http://localhost:4321" }
             ]
         }),
         tailwindcss()
@@ -20,7 +19,7 @@ export default defineConfig({
     resolve: {
         preserveSymlinks: true, // Enable symlink support for shared assets
         alias: {
-            '@shared': '/shared'
+            "@shared": "/shared"
         }
     }
 });

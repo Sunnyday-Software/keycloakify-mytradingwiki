@@ -16,6 +16,18 @@ export const Default: Story = {
     render: () => <KcPageStory />
 };
 
+export const WithCustomAppUrl: Story = {
+    render: () => (
+        <KcPageStory
+            kcContext={{
+                properties: {
+                    ASTRO_APP_URL: "http://localhost:4321"
+                }
+            }}
+        />
+    )
+};
+
 export const WithInvalidCredential: Story = {
     render: () => (
         <KcPageStory

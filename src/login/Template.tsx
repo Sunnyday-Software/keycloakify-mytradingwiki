@@ -56,7 +56,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
         <div className={kcClsx("kcLoginClass")}>
             <div id="kc-header" className={kcClsx("kcHeaderClass")}>
                 <div id="kc-header-wrapper" className={kcClsx("kcHeaderWrapperClass")}>
-                    <img className={kcClsx("kcLogoClass")} src={mtwLogo} width={96} height={96}  alt={'MTW Logo'}/>
+                    <img className={kcClsx("kcLogoClass")} src={mtwLogo} width={96} height={96} alt={"MTW Logo"} />
                     {msg("loginTitleHtml", realm.displayNameHtml)}
                 </div>
             </div>
@@ -67,7 +67,8 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                             <div id="kc-locale-wrapper" className={kcClsx("kcLocaleWrapperClass")}>
                                 <div
                                     // id="kc-locale-dropdown"
-                                    className={clsx("menu-button-links", kcClsx("kcLocaleDropDownClass"))}>
+                                    className={clsx("menu-button-links", kcClsx("kcLocaleDropDownClass"))}
+                                >
                                     <button
                                         tabIndex={1}
                                         // id="kc-current-locale-link"

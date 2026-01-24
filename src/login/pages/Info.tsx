@@ -9,7 +9,7 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
 
     const { advancedMsgStr, msg } = i18n;
 
-    const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, client } = kcContext;
+    const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, properties } = kcContext;
 
     return (
         <Template
@@ -72,10 +72,10 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
                             );
                         }
 
-                        if (client.baseUrl) {
+                        if (properties?.ASTRO_APP_URL) {
                             return (
                                 <p>
-                                    <a href={client.baseUrl} className={styles.link}>
+                                    <a href={properties.ASTRO_APP_URL} className={styles.link}>
                                         {msg("backToApplication")}
                                     </a>
                                 </p>

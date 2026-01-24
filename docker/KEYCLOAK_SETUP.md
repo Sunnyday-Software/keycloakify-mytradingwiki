@@ -3,16 +3,19 @@
 ## Docker Compose Setup
 
 ### Start Keycloak
+
 ```bash
 docker compose -f docker-compose.keycloak.yml up -d
 ```
 
 ### Stop Keycloak
+
 ```bash
 docker compose -f docker-compose.keycloak.yml down
 ```
 
 ### View Logs
+
 ```bash
 docker compose -f docker-compose.keycloak.yml logs -f keycloak
 ```
@@ -22,22 +25,25 @@ docker compose -f docker-compose.keycloak.yml logs -f keycloak
 ## Realm Configuration
 
 ### Realm Details
-- **Realm Name**: `mytradingwiki-dev` (development)
-- **Realm Name**: `mytradingwiki` (production)
-- **Display Name**: MyTradingWiki Development
-- **Login Theme**: `keycloakify-starter` (custom theme)
+
+-   **Realm Name**: `mytradingwiki-dev` (development)
+-   **Realm Name**: `mytradingwiki` (production)
+-   **Display Name**: MyTradingWiki Development
+-   **Login Theme**: `keycloakify-starter` (custom theme)
 
 ### Access URLs
 
 **Development**:
-- Admin Console: http://localhost:8080/admin
-- Realm Account: http://localhost:8080/realms/mytradingwiki-dev/account
-- Auth Server: http://localhost:8080
+
+-   Admin Console: http://localhost:8080/admin
+-   Realm Account: http://localhost:8080/realms/mytradingwiki-dev/account
+-   Auth Server: http://localhost:8080
 
 **Production**:
-- Admin Console: https://auth.mytradingwiki.com/admin
-- Realm Account: https://auth.mytradingwiki.com/realms/mytradingwiki/account
-- Auth Server: https://auth.mytradingwiki.com
+
+-   Admin Console: https://auth.mytradingwiki.com/admin
+-   Realm Account: https://auth.mytradingwiki.com/realms/mytradingwiki/account
+-   Auth Server: https://auth.mytradingwiki.com
 
 ---
 
@@ -54,20 +60,14 @@ docker compose -f docker-compose.keycloak.yml logs -f keycloak
 
 ```json
 {
-  "clientId": "mytradingwiki-app",
-  "enabled": true,
-  "publicClient": false,
-  "protocol": "openid-connect",
-  "standardFlowEnabled": true,
-  "directAccessGrantsEnabled": true,
-  "redirectUris": [
-    "http://localhost:4321/*",
-    "https://www.mytradingwiki.com/*"
-  ],
-  "webOrigins": [
-    "http://localhost:4321",
-    "https://www.mytradingwiki.com"
-  ]
+    "clientId": "mytradingwiki-app",
+    "enabled": true,
+    "publicClient": false,
+    "protocol": "openid-connect",
+    "standardFlowEnabled": true,
+    "directAccessGrantsEnabled": true,
+    "redirectUris": ["http://localhost:4321/*", "https://www.mytradingwiki.com/*"],
+    "webOrigins": ["http://localhost:4321", "https://www.mytradingwiki.com"]
 }
 ```
 
@@ -118,6 +118,7 @@ User clicks email link → Keycloak verification endpoint
 ```
 
 **Email Link Format**:
+
 ```
 http://localhost:8080/realms/mytradingwiki-dev/login-actions/action-token
   ?key={verification_token}
@@ -150,11 +151,13 @@ SameSite: `Lax`
 ## Admin Credentials
 
 **Development**:
-- Username: `admin`
-- Password: `admin`
+
+-   Username: `admin`
+-   Password: `admin`
 
 **Production**:
-- Use secure credentials (not documented here)
+
+-   Use secure credentials (not documented here)
 
 ---
 
@@ -163,27 +166,30 @@ SameSite: `Lax`
 ### Theme Not Loading
 
 1. Verify theme JAR is mounted:
-   ```bash
-   docker exec mytradingwiki-keycloak ls -lh /opt/keycloak/providers/
-   ```
+
+    ```bash
+    docker exec mytradingwiki-keycloak ls -lh /opt/keycloak/providers/
+    ```
 
 2. Check Keycloak logs for theme loading:
-   ```bash
-   docker logs mytradingwiki-keycloak 2>&1 | grep -i theme
-   ```
+
+    ```bash
+    docker logs mytradingwiki-keycloak 2>&1 | grep -i theme
+    ```
 
 3. Restart Keycloak:
-   ```bash
-   docker compose -f docker-compose.keycloak.yml restart keycloak
-   ```
+    ```bash
+    docker compose -f docker-compose.keycloak.yml restart keycloak
+    ```
 
 ### Invalid Redirect URI Error
 
 1. Verify redirect URIs are configured:
-   ```bash
-   docker exec mytradingwiki-keycloak /opt/keycloak/bin/kcadm.sh \
-     get clients/<client-id> -r mytradingwiki-dev --fields redirectUris
-   ```
+
+    ```bash
+    docker exec mytradingwiki-keycloak /opt/keycloak/bin/kcadm.sh \
+      get clients/<client-id> -r mytradingwiki-dev --fields redirectUris
+    ```
 
 2. Add missing URI if needed
 
@@ -200,27 +206,30 @@ SameSite: `Lax`
 If automatic init script fails, configure manually via admin console:
 
 1. **Create Realm**:
-   - Admin Console → Create Realm
-   - Name: `mytradingwiki-dev`
-   - Enabled: true
+
+    - Admin Console → Create Realm
+    - Name: `mytradingwiki-dev`
+    - Enabled: true
 
 2. **Set Theme**:
-   - Realm Settings → Themes
-   - Login Theme: `keycloakify-starter`
-   - Save
+
+    - Realm Settings → Themes
+    - Login Theme: `keycloakify-starter`
+    - Save
 
 3. **Create Client**:
-   - Clients → Create Client
-   - Client ID: `mytradingwiki-app`
-   - Client Protocol: openid-connect
-   - Access Type: confidential
-   - Valid Redirect URIs: `http://localhost:4321/*`
-   - Web Origins: `http://localhost:4321`
-   - Save
+
+    - Clients → Create Client
+    - Client ID: `mytradingwiki-app`
+    - Client Protocol: openid-connect
+    - Access Type: confidential
+    - Valid Redirect URIs: `http://localhost:4321/*`
+    - Web Origins: `http://localhost:4321`
+    - Save
 
 4. **Get Client Secret**:
-   - Clients → mytradingwiki-app → Credentials tab
-   - Copy secret value
+    - Clients → mytradingwiki-app → Credentials tab
+    - Copy secret value
 
 ---
 
@@ -229,16 +238,18 @@ If automatic init script fails, configure manually via admin console:
 When you make changes to the Keycloakify theme:
 
 1. **Build theme**:
-   ```bash
-   cd ../keycloakify-mytradingwiki
-   yarn build-keycloak-theme
-   ```
+
+    ```bash
+    cd ../keycloakify-mytradingwiki
+    yarn build-keycloak-theme
+    ```
 
 2. **Restart Keycloak** (theme JAR is volume-mounted, so restart picks up changes):
-   ```bash
-   cd ../solutions-dreamlab-trademind
-   docker compose -f docker-compose.keycloak.yml restart keycloak
-   ```
+
+    ```bash
+    cd ../solutions-dreamlab-trademind
+    docker compose -f docker-compose.keycloak.yml restart keycloak
+    ```
 
 3. **Clear browser cache** and reload login page
 
@@ -249,10 +260,11 @@ When you make changes to the Keycloakify theme:
 For production deployment to `auth.mytradingwiki.com`:
 
 1. Update Docker Compose with production settings:
-   - Use production Keycloak image
-   - Configure SSL certificates
-   - Use secure database credentials
-   - Update environment variables
+
+    - Use production Keycloak image
+    - Configure SSL certificates
+    - Use secure database credentials
+    - Update environment variables
 
 2. Create production client with production redirect URIs
 

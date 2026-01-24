@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC_JAR="${ROOT_DIR}/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar"
-DEST_JAR="${ROOT_DIR}/../solutions-dreamlab-trademind-backend/keycloak/keycloak-theme/keycloak-theme-for-kc-all-other-versions.jar"
+DEST_JAR="${ROOT_DIR}/../solutions-dreamlab-trademind-backend/keycloak/keycloak-theme/mytradingwiki-keycloak-theme.jar"
 
 if [[ ! -f "${SRC_JAR}" ]]; then
   echo "Source theme JAR not found: ${SRC_JAR}" >&2

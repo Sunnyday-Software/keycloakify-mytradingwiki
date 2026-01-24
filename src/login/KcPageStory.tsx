@@ -19,7 +19,7 @@ export const { getKcContextMock } = createGetKcContextMock({
     overrides: {
         realm: {
             name: "MyTradingWiki",
-            displayName:"MyTradingWiki",
+            displayName: "MyTradingWiki",
             displayNameHtml: "MyTradingWiki"
         }
     }
