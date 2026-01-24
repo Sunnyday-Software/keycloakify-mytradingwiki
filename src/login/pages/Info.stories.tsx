@@ -3,10 +3,37 @@ import { createKcPageStory } from "../KcPageStory";
 
 const { KcPageStory } = createKcPageStory({ pageId: "info.ftl" });
 
+type PrimaryStoryProps = {
+    astroAppUrl?: string;
+};
+
+function PrimaryStory(props: PrimaryStoryProps) {
+    const {  astroAppUrl } = props;
+
+    return (
+        <KcPageStory
+            kcContext={{
+                messageHeader: "Your account has been updated.",
+                message: {
+                    summary: "Your account has been updated."
+                },
+                properties: {
+                    ASTRO_APP_URL: astroAppUrl
+                }
+            }}
+        />
+    );
+}
+
 const meta = {
     title: "login/info.ftl",
-    component: KcPageStory
-} satisfies Meta<typeof KcPageStory>;
+    component: PrimaryStory,
+    argTypes: {
+        astroAppUrl: {
+            control: "text"
+        }
+    }
+} satisfies Meta<typeof PrimaryStory>;
 
 export default meta;
 
@@ -56,4 +83,11 @@ export const WithRequiredActions: Story = {
             }}
         />
     )
+};
+
+export const WithRedirectLink: Story = {
+    args: {
+        astroAppUrl: "https://example.com"
+    },
+    render: args => <PrimaryStory {...(args as PrimaryStoryProps)} />
 };

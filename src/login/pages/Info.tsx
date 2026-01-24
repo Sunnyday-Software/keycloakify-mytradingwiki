@@ -1,5 +1,6 @@
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import { kcSanitize } from "keycloakify/lib/kcSanitize";
+import { useEffect, useMemo, useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import styles from "./Info.module.css";
@@ -9,7 +10,44 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
 
     const { advancedMsgStr, msg } = i18n;
 
-    const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, properties } = kcContext;
+    const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, properties, client } = kcContext;
+
+    const targetUrl = useMemo(() => {
+        if (properties?.ASTRO_APP_URL) {
+            return `${properties.ASTRO_APP_URL}/dashboard`;
+        }
+
+        return pageRedirectUri ?? actionUri ?? client?.baseUrl ?? undefined;
+    }, [properties?.ASTRO_APP_URL, pageRedirectUri, actionUri, client?.baseUrl]);
+
+    const totalSeconds = 5;
+    const totalMs = totalSeconds * 1000;
+    const [elapsedMs, setElapsedMs] = useState(0);
+
+    useEffect(() => {
+        if (!targetUrl) {
+            return;
+        }
+
+        const startedAt = Date.now();
+        const intervalId = window.setInterval(() => {
+            const nextElapsed = Date.now() - startedAt;
+            if (nextElapsed >= totalMs) {
+                window.clearInterval(intervalId);
+                window.location.assign(targetUrl);
+                return;
+            }
+
+            setElapsedMs(nextElapsed);
+        }, 100);
+
+        return () => {
+            window.clearInterval(intervalId);
+        };
+    }, [targetUrl, totalMs]);
+
+    const secondsLeft = Math.max(0, Math.ceil((totalMs - elapsedMs) / 1000));
+    const progressPercent = Math.min(100, Math.round((elapsedMs / totalMs) * 100));
 
     return (
         <Template
@@ -18,7 +56,7 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
             doUseDefaultCss={doUseDefaultCss}
             classes={classes}
             displayMessage={false}
-            headerNode={
+            headerNode={messageHeader &&
                 <span
                     dangerouslySetInnerHTML={{
                         __html: kcSanitize(messageHeader ?? message.summary)
@@ -27,60 +65,45 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
             }
         >
             <div className={styles.infoContainer}>
-                <div id="kc-info-message" className={styles.infoCard}>
-                    <p
-                        className={styles.instruction}
-                        dangerouslySetInnerHTML={{
-                            __html: kcSanitize(
-                                (() => {
-                                    let html = message.summary?.trim();
-
-                                    if (requiredActions) {
-                                        html += " <b>";
-
-                                        html += requiredActions.map(requiredAction => advancedMsgStr(`requiredAction.${requiredAction}`)).join(", ");
-
-                                        html += "</b>";
-                                    }
-
-                                    return html;
-                                })()
-                            )
-                        }}
-                    />
+                <div id="kc-info-message">
+                    {requiredActions && (
+                        <p
+                            className={styles.instruction}
+                            dangerouslySetInnerHTML={{
+                                __html: kcSanitize(
+                                    ` <b>${requiredActions
+                                        .map(requiredAction => advancedMsgStr(`requiredAction.${requiredAction}`))
+                                        .join(", ")}</b>`
+                                )
+                            }}
+                        />
+                    )}
                     {(() => {
                         if (skipLink) {
                             return null;
                         }
 
-                        if (pageRedirectUri) {
-                            return (
-                                <p>
-                                    <a href={pageRedirectUri} className={styles.link}>
-                                        {msg("backToApplication")}
-                                    </a>
-                                </p>
-                            );
-                        }
-                        if (actionUri) {
-                            return (
-                                <p>
-                                    <a href={actionUri} className={styles.link}>
-                                        {msg("proceedWithAction")}
-                                    </a>
-                                </p>
-                            );
+                        if (!targetUrl) {
+                            return null;
                         }
 
-                        if (properties?.ASTRO_APP_URL) {
-                            return (
-                                <p>
-                                    <a href={properties.ASTRO_APP_URL} className={styles.link}>
-                                        {msg("backToApplication")}
-                                    </a>
+                        return (
+                            <div className={styles.actions}>
+                                <p className={styles.countdownText}>
+                                    Redirecting in {secondsLeft}s
                                 </p>
-                            );
-                        }
+                                <div className={styles.progressBar} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
+                                    <div className={styles.progressBarFill} style={{ width: `${progressPercent}%` }} />
+                                </div>
+                                <button
+                                    type="button"
+                                    className={styles.redirectButton}
+                                    onClick={() => window.location.assign(targetUrl)}
+                                >
+                                    {msg("backToApplication")}
+                                </button>
+                            </div>
+                        );
                     })()}
                 </div>
             </div>
