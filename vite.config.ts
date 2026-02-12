@@ -11,7 +11,8 @@ export default defineConfig({
             themeName: "mytradingwiki",
             accountThemeImplementation: "none",
             environmentVariables: [
-                { name: "ASTRO_APP_URL", default: "http://localhost:4321" }
+                { name: "ASTRO_APP_URL", default: "https://www.mytradingwiki.com" },
+                { name: "ASTRO_INFO_REDIRECT_TIMEOUT_MS", default: "5000" }
             ]
         }),
         tailwindcss()

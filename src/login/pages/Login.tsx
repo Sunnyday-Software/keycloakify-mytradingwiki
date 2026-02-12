@@ -8,6 +8,38 @@ import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 
+const APP_REGISTER_PATH = "/auth/register";
+
+function normalizeBaseUrl(rawBaseUrl: string | undefined): string | undefined {
+    const baseUrl = rawBaseUrl?.trim();
+
+    if (!baseUrl) {
+        return undefined;
+    }
+
+    return baseUrl.replace(/\/+$/, "");
+}
+
+function createLocalizedPath(languageTag: string, pathname: string): string {
+    const normalizedPathname = pathname.startsWith("/") ? pathname : `/${pathname}`;
+    return `/${languageTag}${normalizedPathname}`;
+}
+
+function resolveRegisterHref(params: {
+    astroAppUrl: string | undefined;
+    languageTag: string;
+    registrationUrl: string | undefined;
+}): string {
+    const { astroAppUrl, languageTag, registrationUrl } = params;
+    const baseUrl = normalizeBaseUrl(astroAppUrl);
+
+    if (baseUrl) {
+        return `${baseUrl}${createLocalizedPath(languageTag, APP_REGISTER_PATH)}`;
+    }
+
+    return registrationUrl ?? "#";
+}
+
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
     const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
@@ -19,6 +51,11 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
     const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, properties } = kcContext;
 
     const { msg, msgStr, currentLanguage } = i18n;
+    const registerHref = resolveRegisterHref({
+        astroAppUrl: properties?.ASTRO_APP_URL,
+        languageTag: currentLanguage.languageTag,
+        registrationUrl: url.registrationUrl
+    });
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
@@ -36,7 +73,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                     <div id="kc-registration">
                         <span>
                             {msg("noAccount")}{" "}
-                            <a tabIndex={8} href={`${properties.ASTRO_APP_URL}/${currentLanguage.languageTag}/auth/register`}>
+                            <a tabIndex={8} href={registerHref}>
                                 {msg("doRegister")}
                             </a>
                         </span>

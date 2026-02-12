@@ -76,6 +76,28 @@ If you need to modify files in the shared assets:
 
 [Documentation](https://docs.keycloakify.dev/testing-your-theme)
 
+## Frontend redirect env (local override + production fallback)
+
+This theme supports runtime redirect overrides via `kcContext.properties`.
+
+- `ASTRO_APP_URL`: when present, login/register and info redirects point to the Astro app.
+- `ASTRO_INFO_REDIRECT_TIMEOUT_MS`: optional info-page timeout in milliseconds.
+
+Behavior:
+
+- Register link on `login.ftl` is locale-aware: `/{locale}/auth/register`.
+- Info-page redirect target is locale-aware first, then falls back to Keycloak URLs.
+- If overrides are missing, existing public/Keycloak fallback behavior is preserved.
+
+Local example:
+
+```bash
+ASTRO_APP_URL=http://localhost:4321
+ASTRO_INFO_REDIRECT_TIMEOUT_MS=2500
+```
+
+Detailed guide: `docs/development/keycloak-frontend-redirect-env.adoc`.
+
 # Email theme (HTML)
 
 ## Where to edit
@@ -121,6 +143,77 @@ You can customize this behavior, see documentation [here](https://docs.keycloaki
     ```
 2. Use the generated JAR from `dist_keycloak/` and load it as a Keycloak provider (container mount or Keycloak installation).
 3. Run `kc.sh build` after adding the provider, then select the theme in **Realm Settings → Themes**.
+
+## Backend deploy flow (local + production)
+
+### Local operator flow (`solutions-dreamlab-trademind-backend`)
+
+Run from this repository root.
+
+1. Stop running backend app containers (`mytw_api*`):
+   ```bash
+   docker ps --format '{{.Names}}' | grep '^mytw_api' | xargs -r docker stop
+   ```
+
+2. Build and deploy the theme jar:
+   ```bash
+   npm run build-keycloak-theme
+   npm run deploy-backend-theme
+   ```
+
+   `deploy-backend-theme` copies the built provider to backend path:
+   `../solutions-dreamlab-trademind-backend/keycloak/keycloak-theme/mytradingwiki-theme.jar`
+
+3. Restart backend stack through dpm and launch Quarkus dev:
+   ```bash
+   cd ../solutions-dreamlab-trademind-backend
+   ./dpm.sh app-dev
+   ```
+   Then select menu option `2`.
+
+4. Verify theme jar is mounted in Keycloak container:
+   ```bash
+   docker exec -it mytw_keycloak_1 ls -l /opt/keycloak/providers/mytradingwiki-theme.jar
+   ```
+
+5. Verify realm `devrealm` uses login theme `mytradingwiki`:
+   ```bash
+   docker exec -it mytw_keycloak_1 /opt/keycloak/bin/kcadm.sh get realms/devrealm --fields realm,loginTheme
+   ```
+
+### Local `.env.development` override (frontend redirects)
+
+`dpm.sh` loads `.env.*` files (including `.env.development`).
+
+Example local file in backend repo:
+
+```bash
+# .env.development
+ASTRO_APP_URL=http://localhost:4321
+ASTRO_INFO_REDIRECT_TIMEOUT_MS=2500
+```
+
+### Production flow (manual, no automatic remote push)
+
+For production updates in external repo `keycloak-sunnyday-software`:
+
+1. Build the theme jar in this repository.
+2. Manually replace target provider jar with `mytradingwiki-theme.jar` in `keycloak-sunnyday-software`.
+3. Commit and push manually in that external repo, following its release process.
+
+This repository does not perform automatic push/deploy to `keycloak-sunnyday-software`.
+
+### Troubleshooting: `KME_API_KEY` Quarkus blocker
+
+If app-dev startup fails with a Quarkus error about `KME_API_KEY`, treat it as backend runtime configuration issue.
+
+- It does not indicate a theme deploy failure.
+- Theme deploy is complete once `mytradingwiki-theme.jar` is present in Keycloak providers and `devrealm` has `loginTheme=mytradingwiki`.
+
+For full operator runbook and backend-side checks see:
+
+- `docs/development/keycloak-frontend-redirect-env.adoc`
+- `../solutions-dreamlab-trademind-backend/docs/keycloak-env-injection.adoc`
 
 # Initializing the account theme
 

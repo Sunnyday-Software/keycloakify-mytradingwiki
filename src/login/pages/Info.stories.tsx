@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { createKcPageStory } from "../KcPageStory";
+import { createKcPageStory, createStorybookStoryHref } from "../KcPageStory";
 
 const { KcPageStory } = createKcPageStory({ pageId: "info.ftl" });
+const LOGIN_STORY_TITLE = "Authentication/Login Flow/Sign In (login.ftl)";
 
 type PrimaryStoryProps = {
     astroAppUrl?: string;
@@ -26,7 +27,7 @@ function PrimaryStory(props: PrimaryStoryProps) {
 }
 
 const meta = {
-    title: "login/info.ftl",
+    title: "Authentication/Login Flow/Post Login Information (info.ftl)",
     component: PrimaryStory,
     argTypes: {
         astroAppUrl: {
@@ -39,7 +40,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const DefaultMessage: Story = {
     render: () => (
         <KcPageStory
             kcContext={{
@@ -52,7 +53,7 @@ export const Default: Story = {
     )
 };
 
-export const WithLinkBack: Story = {
+export const ReturnToSignIn: Story = {
     render: () => (
         <KcPageStory
             kcContext={{
@@ -60,13 +61,21 @@ export const WithLinkBack: Story = {
                 message: {
                     summary: "Server message"
                 },
-                actionUri: undefined
+                actionUri: createStorybookStoryHref({
+                    title: LOGIN_STORY_TITLE,
+                    exportName: "DefaultState"
+                }),
+                pageRedirectUri: undefined,
+                skipLink: false,
+                properties: {
+                    ASTRO_INFO_REDIRECT_TIMEOUT_MS: "60000"
+                }
             }}
         />
     )
 };
 
-export const WithRequiredActions: Story = {
+export const RequiredActionsSummary: Story = {
     render: () => (
         <KcPageStory
             kcContext={{
@@ -85,7 +94,7 @@ export const WithRequiredActions: Story = {
     )
 };
 
-export const WithRedirectLink: Story = {
+export const RedirectToApplication: Story = {
     args: {
         astroAppUrl: "https://example.com"
     },

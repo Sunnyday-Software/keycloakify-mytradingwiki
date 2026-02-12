@@ -1,0 +1,32 @@
+{
+  "id": "keycloakify-frontend-redirect-env-04",
+  "seq": "04",
+  "title": "Validate redirect behavior for local and production defaults",
+  "status": "pending",
+  "depends_on": [
+    "01",
+    "02",
+    "03"
+  ],
+  "parallel": false,
+  "suggested_agent": "BuildAgent",
+  "context_files": [
+    "/home/dreamux/Projects/mytradingwiki/.opencode/context/core/standards/test-coverage.md",
+    "/home/dreamux/Projects/mytradingwiki/.opencode/context/core/standards/documentation.md"
+  ],
+  "reference_files": [
+    "src/login/pages/Login.tsx",
+    "src/login/pages/Info.tsx",
+    "README.md",
+    "docs/development/keycloak-redirect-env.adoc"
+  ],
+  "acceptance_criteria": [
+    "Local register flow redirects to ASTRO_APP_URL app route.",
+    "Info timeout redirect in local environment targets ASTRO_APP_URL app route.",
+    "Without ASTRO_APP_URL override, production public redirect behavior remains unchanged.",
+    "Validation evidence is captured in completion summary with executed checks."
+  ],
+  "deliverables": [
+    "Validation evidence in completion_summary"
+  ]
+}
