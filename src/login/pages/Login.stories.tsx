@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { createKcPageStory } from "../KcPageStory";
+import { createKcPageStory, createStorybookStoryHref } from "../KcPageStory";
 
 const { KcPageStory } = createKcPageStory({ pageId: "login.ftl" });
+const PASSWORD_RECOVERY_STORY_TITLE = "Authentication/Login Flow/Password Recovery (login-reset-password.ftl)";
 
 const meta = {
-    title: "login/login.ftl",
+    title: "Authentication/Login Flow/Sign In (login.ftl)",
     component: KcPageStory
 } satisfies Meta<typeof KcPageStory>;
 
@@ -12,8 +13,35 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const DefaultState: Story = {
     render: () => <KcPageStory />
+};
+
+export const FlowToPasswordRecovery: Story = {
+    render: () => (
+        <KcPageStory
+            kcContext={{
+                url: {
+                    loginResetCredentialsUrl: createStorybookStoryHref({
+                        title: PASSWORD_RECOVERY_STORY_TITLE,
+                        exportName: "DefaultState"
+                    })
+                }
+            }}
+        />
+    )
+};
+
+export const WithCustomAppUrl: Story = {
+    render: () => (
+        <KcPageStory
+            kcContext={{
+                properties: {
+                    ASTRO_APP_URL: "http://localhost:4321"
+                }
+            }}
+        />
+    )
 };
 
 export const WithInvalidCredential: Story = {

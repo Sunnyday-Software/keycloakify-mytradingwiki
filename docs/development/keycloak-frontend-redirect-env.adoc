@@ -1,0 +1,219 @@
+= Keycloak frontend redirect env
+:toc:
+
+This guide documents how frontend redirect behavior is controlled in the Keycloakify theme.
+
+== Local operator runbook (build, deploy, test)
+
+This is the fastest end-to-end procedure to rebuild the theme and test it on local backend Keycloak.
+
+=== 1) Stop running backend app containers (`mytw_api*`)
+
+[source,bash]
+----
+docker ps --format '{{.Names}}' | grep '^mytw_api' | xargs -r docker stop
+----
+
+=== 2) Build and deploy theme jar from this repository
+
+Run from `keycloakify-mytradingwiki` root:
+
+[source,bash]
+----
+npm run build-keycloak-theme
+npm run deploy-backend-theme
+----
+
+Expected deploy target in backend repo:
+
+- `../solutions-dreamlab-trademind-backend/keycloak/keycloak-theme/mytradingwiki-theme.jar`
+
+=== 3) Restart backend and run Quarkus dev
+
+[source,bash]
+----
+cd ../solutions-dreamlab-trademind-backend
+./dpm.sh app-dev
+----
+
+In the interactive menu, select option `2`.
+
+=== 4) Verify jar in Keycloak container
+
+[source,bash]
+----
+docker exec -it mytw_keycloak_1 ls -l /opt/keycloak/providers/mytradingwiki-theme.jar
+----
+
+=== 5) Verify theme loaded in realm `devrealm`
+
+[source,bash]
+----
+docker exec -it mytw_keycloak_1 /opt/keycloak/bin/kcadm.sh get realms/devrealm --fields realm,loginTheme
+----
+
+Expected value:
+
+[source,text]
+----
+"realm" : "devrealm"
+"loginTheme" : "mytradingwiki"
+----
+
+== Local `.env.development` for frontend redirect overrides
+
+`dpm.sh` loads `.env.*` files, including `.env.development`.
+
+Create/update this file in backend repo root:
+
+[source,bash]
+----
+# .env.development
+ASTRO_APP_URL=http://localhost:4321
+ASTRO_INFO_REDIRECT_TIMEOUT_MS=2500
+----
+
+This injects runtime values into Keycloak for theme redirects.
+
+== Production flow (manual)
+
+Production update is manual in external repo `keycloak-sunnyday-software`:
+
+1. Build the new theme jar from `keycloakify-mytradingwiki`.
+2. Manually replace target provider jar with `mytradingwiki-theme.jar` in `keycloak-sunnyday-software`.
+3. Commit and push manually in `keycloak-sunnyday-software` according to release policy.
+
+No automatic push/deploy to `keycloak-sunnyday-software` is performed from this repository.
+
+== Variables
+
+[cols="1,2,2",options="header"]
+|===
+| Variable | Used by | Effect
+
+| `ASTRO_APP_URL`
+| `Login.tsx`, `Info.tsx`
+| Base URL for locale-aware frontend redirects.
+
+| `ASTRO_INFO_REDIRECT_TIMEOUT_MS`
+| `Info.tsx`
+| Redirect countdown timeout in milliseconds.
+|===
+
+== Runtime source (`kcContext.properties`)
+
+Both values are read from `kcContext.properties` at runtime.
+
+- `ASTRO_APP_URL` is configured in Keycloakify `environmentVariables` and available in `kcContext.properties`.
+- `ASTRO_INFO_REDIRECT_TIMEOUT_MS` is optional runtime property. If missing/invalid, fallback is `5000` ms.
+
+Reference (Keycloakify config pattern):
+
+[source,ts]
+----
+keycloakify({
+  themeName: "mytradingwiki",
+  accountThemeImplementation: "none",
+  environmentVariables: [
+    { name: "ASTRO_APP_URL", default: "https://www.mytradingwiki.com" },
+    { name: "ASTRO_INFO_REDIRECT_TIMEOUT_MS", default: "5000" }
+  ]
+});
+----
+
+If `ASTRO_INFO_REDIRECT_TIMEOUT_MS` is not declared in `environmentVariables`, runtime fallback in `Info.tsx` still guarantees `5000` ms.
+
+== Login register link behavior (locale-aware)
+
+On `login.ftl`:
+
+1. If `ASTRO_APP_URL` exists and is non-empty, register link becomes:
+   `ASTRO_APP_URL + /{languageTag}/auth/register`
+2. Otherwise it falls back to Keycloak's `url.registrationUrl`.
+3. Final fallback is `#` (defensive only).
+
+Example (`languageTag=en`):
+
+[source,text]
+----
+ASTRO_APP_URL=http://localhost:4321
+-> http://localhost:4321/en/auth/register
+----
+
+== Info timeout redirect behavior and fallback chain
+
+On `info.ftl`, redirect target resolution order is:
+
+1. `ASTRO_APP_URL + /{languageTag}/dashboard`
+2. `pageRedirectUri`
+3. `actionUri`
+4. `client.baseUrl`
+5. no auto-redirect target
+
+Timeout resolution:
+
+1. Read `ASTRO_INFO_REDIRECT_TIMEOUT_MS`
+2. Parse as integer milliseconds
+3. If missing, non-numeric, or `<= 0`, use `5000`
+
+Example (`languageTag=it`):
+
+[source,text]
+----
+ASTRO_APP_URL=http://localhost:4321
+ASTRO_INFO_REDIRECT_TIMEOUT_MS=2500
+-> target: http://localhost:4321/it/dashboard
+-> timeout: 2500 ms
+----
+
+== Local development example
+
+Use local values in your Keycloak container/runtime environment:
+
+[source,bash]
+----
+ASTRO_APP_URL=http://localhost:4321
+ASTRO_INFO_REDIRECT_TIMEOUT_MS=2500
+----
+
+Expected behavior:
+
+- Login "Register" points to `http://localhost:4321/{locale}/auth/register`.
+- Info page auto-redirect points to `http://localhost:4321/{locale}/dashboard`.
+- Countdown shows about 3s (rounded from 2500 ms).
+
+== Production fallback behavior (unchanged)
+
+Without local overrides:
+
+- Register uses Keycloak `url.registrationUrl`.
+- Info redirect uses `pageRedirectUri`, then `actionUri`, then `client.baseUrl`.
+- Timeout defaults to `5000` ms.
+
+This preserves existing production/public behavior.
+
+== Troubleshooting
+
+=== Quarkus blocker: `KME_API_KEY`
+
+If `./dpm.sh app-dev` fails because Quarkus requires `KME_API_KEY`:
+
+- This is a backend runtime configuration blocker.
+- It is not caused by theme build/deploy.
+- Validate theme deploy independently with jar and realm checks from this runbook.
+
+=== Register still points to Keycloak
+
+- Check `ASTRO_APP_URL` is non-empty in runtime env.
+- Check final URL has no trailing slash issues (code trims trailing `/`).
+- Confirm current locale is expected (path uses `/{languageTag}/...`).
+
+=== Info page does not auto-redirect
+
+- Confirm `skipLink` is not enabled for that flow.
+- Confirm at least one redirect source exists (`ASTRO_APP_URL`, `pageRedirectUri`, `actionUri`, `client.baseUrl`).
+
+=== Timeout value ignored
+
+- Use a positive integer string, for example `2500`.
+- Values like empty, `abc`, `0`, `-1` fall back to `5000`.

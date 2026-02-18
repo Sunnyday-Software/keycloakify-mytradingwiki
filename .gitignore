@@ -63,3 +63,7 @@ jspm_packages
 .claude
 .playwright-mcp
 /.keycloakify/realm-kc-26.json
+
+# Environment files - allow .env.local for local development
+.env.local
+!.env.local

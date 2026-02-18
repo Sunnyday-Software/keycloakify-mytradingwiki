@@ -8,6 +8,39 @@ import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 
+const APP_REGISTER_PATH = "/auth/register";
+
+function normalizeBaseUrl(rawBaseUrl: string | undefined): string | undefined {
+    const baseUrl = rawBaseUrl?.trim();
+
+    if (!baseUrl) {
+        return undefined;
+    }
+
+    return baseUrl.replace(/\/+$/, "");
+}
+
+function createLocalizedPath(languageTag: string, pathname: string): string {
+    const normalizedPathname = pathname.startsWith("/") ? pathname : `/${pathname}`;
+    return `/${languageTag}${normalizedPathname}`;
+}
+
+function resolveRegisterHref(params: {
+    astroAppUrl: string | undefined;
+    languageTag: string;
+}): string {
+    const { astroAppUrl, languageTag } = params;
+    const baseUrl = normalizeBaseUrl(astroAppUrl);
+
+    if (baseUrl) {
+        return `${baseUrl}${createLocalizedPath(languageTag, APP_REGISTER_PATH)}`;
+    }
+
+    // Se ASTRO_APP_URL non definito, usa un path relativo
+    // NON usare MAI registrationUrl che punta a Keycloak (/realms/...)
+    return createLocalizedPath(languageTag, APP_REGISTER_PATH);
+}
+
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
     const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
@@ -16,9 +49,13 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
         classes
     });
 
-    const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField } = kcContext;
+    const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, properties } = kcContext;
 
-    const { msg, msgStr } = i18n;
+    const { msg, msgStr, currentLanguage } = i18n;
+    const registerHref = resolveRegisterHref({
+        astroAppUrl: properties?.ASTRO_APP_URL,
+        languageTag: currentLanguage.languageTag
+    });
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
@@ -36,7 +73,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                     <div id="kc-registration">
                         <span>
                             {msg("noAccount")}{" "}
-                            <a tabIndex={8} href={url.registrationUrl}>
+                            <a tabIndex={8} href={registerHref}>
                                 {msg("doRegister")}
                             </a>
                         </span>

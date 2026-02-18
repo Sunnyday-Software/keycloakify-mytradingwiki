@@ -1,0 +1,30 @@
+{
+  "id": "keycloakify-frontend-redirect-env-03",
+  "seq": "03",
+  "title": "Document frontend redirect env behavior",
+  "status": "pending",
+  "depends_on": [
+    "01",
+    "02"
+  ],
+  "parallel": false,
+  "suggested_agent": "DocWriter",
+  "context_files": [
+    "/home/dreamux/Projects/mytradingwiki/.opencode/context/core/standards/documentation.md"
+  ],
+  "reference_files": [
+    "README.md",
+    "src/login/pages/Login.tsx",
+    "src/login/pages/Info.tsx",
+    "docs/development/commit-message-guidelines.md"
+  ],
+  "acceptance_criteria": [
+    "README documents ASTRO_APP_URL local override behavior and production fallback behavior.",
+    "A detailed AsciiDoc guide is added under docs/ with setup, redirect flow, and troubleshooting.",
+    "Documentation includes timeout override semantics and locale redirect notes."
+  ],
+  "deliverables": [
+    "README.md",
+    "docs/development/keycloak-redirect-env.adoc"
+  ]
+}

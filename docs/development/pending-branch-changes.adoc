@@ -1,0 +1,184 @@
+= Pending Branch Changes (Working Tree)
+:toc:
+
+== Scope and branch context
+
+- Repository: `keycloakify-mytradingwiki`
+- Branch: `feat/branded-email-templates`
+- Snapshot source: user-provided outputs for `git status --short`, `git diff --name-only`, `git diff --cached --name-only`, `git log -n 10 --oneline`
+- Staging state: no staged files (`git diff --cached --name-only` empty)
+
+This document captures the current pending (uncommitted) changes only. It does not restate already-committed work from history except for contextual intent.
+
+== Pending change groups
+
+=== 1) Storybook and UI documentation scaffolding
+
+Files:
+
+- `.storybook/main.ts`
+- `.storybook/preview.ts`
+- `src/login/KcPageStory.tsx`
+- `src/login/pages/Info.stories.tsx`
+- `src/login/pages/Login.stories.tsx`
+- `src/login/pages/LoginIdpLinkEmail.stories.tsx` (new)
+- `src/login/pages/LoginResetPassword.stories.tsx` (new)
+- `src/login/pages/LoginVerifyEmail.stories.tsx` (new)
+
+Observed theme:
+
+- Storybook runtime/config and story coverage for login/info variants are being expanded.
+- New story files indicate broader visual/test coverage for auth flows.
+
+Rationale and expected impact:
+
+- Improves reviewability of Keycloak pages without full realm runtime.
+- Lowers regression risk for template/page styling changes.
+- Increases confidence before packaging and backend deployment.
+
+=== 2) Login and info runtime behavior updates
+
+Files:
+
+- `src/login/pages/Info.tsx`
+- `src/login/pages/Login.tsx`
+- `src/kc.gen.tsx`
+
+Observed theme:
+
+- Login/info behavior is being updated alongside generated Keycloak page wiring.
+- The recent log context (`feat(ui): add info redirect countdown`) aligns with these file touches.
+
+Rationale and expected impact:
+
+- Keeps redirect and page behavior aligned with runtime env-driven expectations.
+- Regenerated wiring file (`src/kc.gen.tsx`) suggests page registration consistency updates.
+
+=== 3) Branded email templates and locale messaging
+
+Files:
+
+- `src/email/html/template.ftl`
+- `src/email/html/email-verification.ftl`
+- `src/email/html/org-invite.ftl`
+- `src/email/html/password-reset.ftl`
+- `src/email/messages/messages_en_override.properties`
+- `src/email/messages/messages_it_override.properties`
+- `src/email/messages/messages_nl_override.properties`
+
+Observed theme:
+
+- HTML email template stack and language override bundles are updated together.
+- Change pattern matches branch focus (`feat/branded-email-templates`) and recent style commits.
+
+Rationale and expected impact:
+
+- Brings consistent look-and-feel across verification, invite, and reset flows.
+- Reduces locale drift by updating overrides in lockstep.
+- May affect rendering in strict mail clients; validation is required.
+
+=== 4) Build, deploy, and project metadata updates
+
+Files:
+
+- `scripts/deploy-local-backend-theme.sh`
+- `vite.config.ts`
+- `package.json`
+- `pnpm-lock.yaml` (new)
+- `README.md`
+- `docs/development/keycloak-frontend-redirect-env.adoc` (new)
+
+Observed theme:
+
+- Local deploy automation and runtime/build configuration are being revised.
+- Existing untracked runbook (`keycloak-frontend-redirect-env.adoc`) documents env-based redirect behavior.
+
+Rationale and expected impact:
+
+- Tightens local loop between theme build and backend Keycloak validation.
+- Keeps operational docs closer to current deploy and redirect behavior.
+- Lockfile introduction/update affects reproducibility and CI consistency.
+
+=== 5) Workspace-local artifacts
+
+Paths:
+
+- `.opencode/` (untracked)
+- `.tmp/` (untracked)
+
+Observed theme:
+
+- Tooling/session artifacts are present in working tree.
+
+Rationale and expected impact:
+
+- Likely non-release artifacts.
+- Should be excluded from production commits unless intentionally versioned.
+
+== Validation checklist
+
+Use this checklist before splitting commits or opening PRs.
+
+[ ] Verify theme build succeeds:
+
+[source,bash]
+----
+npm run build-keycloak-theme
+----
+
+[ ] Verify local backend deploy helper still works:
+
+[source,bash]
+----
+npm run deploy-backend-theme
+----
+
+[ ] Verify login/info stories render and no story import failures exist:
+
+[source,bash]
+----
+npm run storybook
+----
+
+[ ] Validate email templates for the three modified locales (en/it/nl) in a local preview workflow.
+
+[ ] Verify redirect behavior described in `docs/development/keycloak-frontend-redirect-env.adoc` matches runtime behavior for:
+
+- `ASTRO_APP_URL`
+- `ASTRO_INFO_REDIRECT_TIMEOUT_MS`
+
+[ ] Re-run a clean install to confirm lockfile/package alignment:
+
+[source,bash]
+----
+pnpm install --frozen-lockfile
+----
+
+== Risks and open points
+
+- Mixed concern set (templates + login runtime + storybook + build scripts) can make rollback and review harder.
+- Regenerated files (`src/kc.gen.tsx`) can hide incidental diffs if not reviewed carefully.
+- Locale property updates can introduce translation inconsistencies if keys drift between files.
+- Untracked tooling folders (`.opencode/`, `.tmp/`) can be accidentally included.
+
+== Suggested next actions and commit strategy
+
+Recommended commit split:
+
+1. `feat(email): branded template and locale override updates`
+   - email HTML + message override files only.
+2. `feat(login): update login/info behavior and generated kc wiring`
+   - login/info TSX + `src/kc.gen.tsx`.
+3. `chore(storybook): expand auth page stories and preview config`
+   - `.storybook/*` + story files.
+4. `build/docs: align local deploy flow and redirect runbook`
+   - script/config/package/lock/readme/docs updates.
+
+Before commit, explicitly exclude workspace-local artifacts unless needed:
+
+[source,bash]
+----
+git restore --staged .opencode .tmp 2>/dev/null || true
+----
+
+If these paths must remain local-only, ensure ignore rules are in place before finalizing PR.

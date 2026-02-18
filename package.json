@@ -14,6 +14,8 @@
         "build-keycloak-theme": "npm run build && keycloakify build",
         "storybook": "storybook dev -p 6006",
         "format": "prettier . --write",
+        "sync-email-assets": "bash scripts/sync-email-assets.sh",
+        "deploy-backend-theme": "bash scripts/deploy-local-backend-theme.sh",
         "test-email-theme": "keycloakify start-keycloak"
     },
     "license": "MIT",
@@ -28,7 +30,9 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.15.0",
+        "@storybook/core": "8.6.15",
         "@storybook/react": "^8.1.10",
+        "@storybook/react-dom-shim": "8.6.15",
         "@storybook/react-vite": "^8.1.10",
         "@types/react": "^18.2.43",
         "@types/react-dom": "^18.2.17",
@@ -42,8 +46,11 @@
         "eslint-plugin-react-refresh": "^0.4.14",
         "eslint-plugin-storybook": "^0.11.1",
         "globals": "^15.12.0",
+        "jsdoc-type-pratt-parser": "^4.1.0",
         "prettier": "3.3.1",
+        "scheduler": "0.23.2",
         "storybook": "^8.1.10",
+        "tsafe": "1.8.12",
         "typescript": "^5.2.2",
         "typescript-eslint": "^8.15.0",
         "vite": "^5.0.8"

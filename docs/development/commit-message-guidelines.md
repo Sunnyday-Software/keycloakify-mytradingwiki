@@ -20,7 +20,6 @@ When the body is present it must be at least 20 characters long and must conform
 
 The `footer` is optional. The [Commit Message Footer](#commit-footer) format describes what the footer is used for and the structure it must have.
 
-
 ## <a name="commit-header"></a>Commit Message Header
 
 ```
@@ -40,70 +39,67 @@ The `<type>` and `<summary>` fields are mandatory.
 
 Must be one of the following:
 
-| Type | Description |
-|------|-------------|
-| `build` | Changes that affect the build system or external dependencies |
-| `ci` | Changes to our CI configuration files and scripts |
-| `docs` | Documentation only changes |
-| `feat` | A new feature |
-| `fix` | A bug fix |
-| `perf` | A code change that improves performance |
-| `refactor` | A code change that neither fixes a bug nor adds a feature |
-| `test` | Adding missing tests or correcting existing tests |
-| `style` | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) |
-
-
+| Type       | Description                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| `build`    | Changes that affect the build system or external dependencies                                          |
+| `ci`       | Changes to our CI configuration files and scripts                                                      |
+| `docs`     | Documentation only changes                                                                             |
+| `feat`     | A new feature                                                                                          |
+| `fix`      | A bug fix                                                                                              |
+| `perf`     | A code change that improves performance                                                                |
+| `refactor` | A code change that neither fixes a bug nor adds a feature                                              |
+| `test`     | Adding missing tests or correcting existing tests                                                      |
+| `style`    | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) |
 
 ### <a name="scope"></a> Scope (Mandatory)
+
 The scope should be the name of the package affected (as perceived by the person reading the changelog generated from commit messages).
 
 The following is the list of supported scopes:
 
-
-| Scope | Description |
-|-------|-------------|
-|`core`|Core module |
-|`api`|API module |
-|`ui`|UI module |
-|`auth`|Authentication module |
-|`database`|Database module |
-|`config`|Configuration module |
-|`security`|Security module |
-|`localization`|Localization module |
-
-
+| Scope          | Description           |
+| -------------- | --------------------- |
+| `core`         | Core module           |
+| `api`          | API module            |
+| `ui`           | UI module             |
+| `auth`         | Authentication module |
+| `database`     | Database module       |
+| `config`       | Configuration module  |
+| `security`     | Security module       |
+| `localization` | Localization module   |
 
 ## Rules
 
 ### Length Requirements
-- **Header**: 5 - 140 characters
-- **Description**: 4 - 100 characters
-- **Scope**: maximum 20 characters
-- **Body lines**: maximum 100 characters
-- **Footer lines**: maximum 100 characters
+
+-   **Header**: 5 - 140 characters
+-   **Description**: 4 - 100 characters
+-   **Scope**: maximum 20 characters
+-   **Body lines**: maximum 100 characters
+-   **Footer lines**: maximum 100 characters
 
 ### Formatting Rules
-- **Type**: must be in lowercase
-- **Description**: must be in lower-case
-- **Scope**: must be in lowercase
-- **Punctuation**: NO period at the end of header/description
+
+-   **Type**: must be in lowercase
+-   **Description**: must be in lower-case
+-   **Scope**: must be in lowercase
+-   **Punctuation**: NO period at the end of header/description
 
 ### Structural Rules
-- **Blank line required before commit body**
-- **Blank line required before footer**
-- **References required (e.g., issue #123, ticket ABC-456)**
-- **Type is required**
-- **Description is required**
 
+-   **Blank line required before commit body**
+-   **Blank line required before footer**
+-   **References required (e.g., issue #123, ticket ABC-456)**
+-   **Type is required**
+-   **Description is required**
 
 ### Summary
 
 Use the summary field to provide a succinct description of the change:
 
-* use the imperative, present tense: "change" not "changed" nor "changes"
-* don't capitalize the first letter
-* no dot (.) at the end
-
+-   use the imperative, present tense: "change" not "changed" nor "changes"
+-   don't capitalize the first letter
+-   no dot (.) at the end
 
 ## <a name="commit-body"></a>Commit Message Body
 
@@ -111,7 +107,6 @@ Just as in the summary, use the imperative, present tense: "fix" not "fixed" nor
 
 Explain the motivation for the change in the commit message body. This commit message should explain _why_ you are making the change.
 You can include a comparison of the previous behavior with the new behavior in order to illustrate the impact of the change.
-
 
 ## <a name="commit-footer"></a>Commit Message Footer
 
@@ -138,7 +133,7 @@ DEPRECATED: <what is deprecated>
 Closes #<pr number>
 ```
 
-Breaking Change section should start with the phrase `BREAKING CHANGE: ` followed by a *brief* summary of the breaking change, a blank line, and a detailed description of the breaking change that also includes migration instructions.
+Breaking Change section should start with the phrase `BREAKING CHANGE: ` followed by a _brief_ summary of the breaking change, a blank line, and a detailed description of the breaking change that also includes migration instructions.
 
 Similarly, a Deprecation section should start with `DEPRECATED: ` followed by a short description of what is deprecated, a blank line, and a detailed description of the deprecation that also mentions the recommended update path.
 
@@ -148,11 +143,9 @@ If the commit reverts a previous commit, it should begin with `revert: `, follow
 
 The content of the commit message body should contain:
 
-- information about the SHA of the commit being reverted in the following format: `This reverts commit <SHA>`,
-- a clear description of the reason for reverting the commit message.
-
-
-
+-   information about the SHA of the commit being reverted in the following format: `This reverts commit <SHA>`,
+-   a clear description of the reason for reverting the commit message.
 
 [angularjs-commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#
+
 #0

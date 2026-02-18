@@ -19,7 +19,7 @@ export const { getKcContextMock } = createGetKcContextMock({
     overrides: {
         realm: {
             name: "MyTradingWiki",
-            displayName:"MyTradingWiki",
+            displayName: "MyTradingWiki",
             displayNameHtml: "MyTradingWiki"
         }
     }
@@ -44,4 +44,21 @@ export function createKcPageStory<PageId extends KcContext["pageId"]>(params: {
     }
 
     return { KcPageStory };
+}
+
+function toStoryIdSegment(value: string): string {
+    return value
+        .trim()
+        .toLowerCase()
+        .replace(/["']/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+export function createStorybookStoryHref(params: {
+    title: string;
+    exportName: string;
+}): string {
+    const { title, exportName } = params;
+    return `/?path=/story/${toStoryIdSegment(title)}--${toStoryIdSegment(exportName)}`;
 }
