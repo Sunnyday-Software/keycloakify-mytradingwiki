@@ -208,10 +208,10 @@
 
 <#macro PrimaryCTA label link aria>
     <#if label?has_content && link?has_content>
-        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 18px 0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px 0;">
             <tr>
-                <td align="center" bgcolor="#4eb780" class="button" style="border-radius:10px;">
-                    <a href="${link}" aria-label="${aria}" style="padding:14px 24px;">${label}</a>
+                <td align="center" bgcolor="#4eb780" class="button" style="border-radius:10px; text-align:center;">
+                    <a href="${link}" aria-label="${aria}" style="display:block; width:100%; padding:14px 24px; text-align:center;">${label}</a>
                 </td>
             </tr>
         </table>

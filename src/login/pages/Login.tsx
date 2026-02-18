@@ -28,16 +28,17 @@ function createLocalizedPath(languageTag: string, pathname: string): string {
 function resolveRegisterHref(params: {
     astroAppUrl: string | undefined;
     languageTag: string;
-    registrationUrl: string | undefined;
 }): string {
-    const { astroAppUrl, languageTag, registrationUrl } = params;
+    const { astroAppUrl, languageTag } = params;
     const baseUrl = normalizeBaseUrl(astroAppUrl);
 
     if (baseUrl) {
         return `${baseUrl}${createLocalizedPath(languageTag, APP_REGISTER_PATH)}`;
     }
 
-    return registrationUrl ?? "#";
+    // Se ASTRO_APP_URL non definito, usa un path relativo
+    // NON usare MAI registrationUrl che punta a Keycloak (/realms/...)
+    return createLocalizedPath(languageTag, APP_REGISTER_PATH);
 }
 
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
@@ -53,8 +54,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
     const { msg, msgStr, currentLanguage } = i18n;
     const registerHref = resolveRegisterHref({
         astroAppUrl: properties?.ASTRO_APP_URL,
-        languageTag: currentLanguage.languageTag,
-        registrationUrl: url.registrationUrl
+        languageTag: currentLanguage.languageTag
     });
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
