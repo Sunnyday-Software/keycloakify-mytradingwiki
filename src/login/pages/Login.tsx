@@ -49,7 +49,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
         classes
     });
 
-    const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, properties } = kcContext;
+    const { social, realm, url, usernameHidden, login, auth, messagesPerField, properties } = kcContext;
 
     const { msg, msgStr, currentLanguage } = i18n;
     const registerHref = resolveRegisterHref({
@@ -67,7 +67,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
             classes={classes}
             displayMessage={!messagesPerField.existsError("username", "password")}
             headerNode={msg("loginAccountTitle")}
-            displayInfo={realm.password && realm.registrationAllowed && !registrationDisabled}
+            displayInfo={true}
             infoNode={
                 <div id="kc-registration-container">
                     <div id="kc-registration">
