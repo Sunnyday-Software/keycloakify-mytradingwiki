@@ -2,10 +2,11 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ASSETS_DIR="${ROOT_DIR}/../mytradingwiki-assets/assets"
+SHARED_PACKAGE_DIR="${ROOT_DIR}/node_modules/@sunny-pirate/mytradingwiki-assets"
+ASSETS_DIR="${SHARED_PACKAGE_DIR}/assets"
 EMAIL_RESOURCES_DIR="${ROOT_DIR}/src/email/resources"
 EMAIL_TEMPLATE="${ROOT_DIR}/src/email/html/template.ftl"
-SHARED_STYLES_DIR="${ROOT_DIR}/shared/styles"
+SHARED_STYLES_DIR="${SHARED_PACKAGE_DIR}/styles"
 
 SRC_LOGO_PNG="${ASSETS_DIR}/mtw-logo-email.png"
 DEST_LOGO_PNG="${EMAIL_RESOURCES_DIR}/mtw-logo-email.png"
@@ -32,7 +33,7 @@ from pathlib import Path
 
 root = Path(os.environ["ROOT_DIR"]).resolve()
 template_path = root / "src" / "email" / "html" / "template.ftl"
-shared_styles_dir = root / "shared" / "styles"
+shared_styles_dir = root / "node_modules" / "@sunny-pirate" / "mytradingwiki-assets" / "styles"
 
 prefixes = ["mtw-email-"]
 

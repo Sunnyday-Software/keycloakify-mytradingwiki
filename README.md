@@ -14,63 +14,43 @@ yarn install # Or use an other package manager, just be sure to delete the yarn.
 
 # Shared Assets
 
-This theme uses shared assets from the `mytradingwiki-assets` repository via git submodule.
+This theme uses shared assets from the `mytradingwiki-assets` repository via package dependency.
 
 ## Initial Setup
 
-After cloning this repository, initialize the submodule:
+After cloning this repository, install dependencies:
 
 ```bash
-git submodule update --init --recursive
+pnpm install
 ```
 
-This will populate the `shared/` directory with the shared assets.
+This installs `@sunny-pirate/mytradingwiki-assets` in `node_modules/`.
 
 ## Updating Shared Assets
 
-To pull the latest changes from the shared assets repository:
+To pull the latest shared assets:
 
 ```bash
-# Pull latest assets
-git submodule update --remote shared
+# Update dependency reference
+pnpm update @sunny-pirate/mytradingwiki-assets
 
-# Commit the submodule pointer update
-git add shared
-git commit -m "chore: update shared assets to latest version"
+# Commit package manifest/lock changes
+git add package.json pnpm-lock.yaml
+git commit -m "chore: update shared assets package version"
 ```
 
 ## Making Changes to Shared Assets
 
-If you need to modify files in the shared assets:
+If you need to modify shared files, do it in:
 
-1. Navigate to the submodule directory:
+- `Sunnyday-Software/mytradingwiki-assets`
 
-    ```bash
-    cd shared
-    ```
-
-2. Make your changes and commit them:
-
-    ```bash
-    git add .
-    git commit -m "your commit message"
-    git push
-    ```
-
-3. Return to the keycloakify root and update the submodule pointer:
-    ```bash
-    cd ../..
-    git add shared
-    git commit -m "chore: update shared assets submodule pointer"
-    ```
+Then bump the dependency in this repository.
 
 ## Troubleshooting
 
-**Issue**: Build fails with missing assets or broken symlinks
-**Solution**: Ensure submodule is initialized: `git submodule update --init --recursive`
-
-**Issue**: Submodule shows as modified after pulling
-**Solution**: The submodule pointer has been updated. Run `git submodule update` to sync to the correct commit.
+**Issue**: Build fails with missing shared assets
+**Solution**: Ensure dependency is installed: `pnpm install`
 
 # Testing the theme locally
 
